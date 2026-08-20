@@ -1,4 +1,4 @@
-export type SeatStatus = 'available' | 'reserved' | 'sold' | 'selected';
+export type SeatStatus = 'available' | 'reserved' | 'sold' | 'selected' | 'booked';
 export type SeatTier = 'standard' | 'premium' | 'vip';
 
 export interface Seat {
