@@ -65,7 +65,7 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
   const toggleSeat = (seatId: string) => {
     setSeats(prev => prev.map(seat => {
       if (seat.id === seatId) {
-        if (seat.status === 'sold' || seat.status === 'reserved') return seat; 
+        if (seat.status === 'sold' || seat.status === 'reserved' || seat.status === 'booked') return seat; 
         
         if (seat.status === 'selected') {
           return { ...seat, status: 'available' };
@@ -159,7 +159,7 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
         <div className="w-6 text-white/40 font-bold text-center text-sm">{rowId}</div>
         <div className="flex gap-2">
           {sortedSeats.map(seat => {
-            const isUnavailable = seat.status === 'sold' || seat.status === 'reserved';
+            const isUnavailable = seat.status === 'sold' || seat.status === 'reserved' || seat.status === 'booked';
             
             return (
               <motion.button
@@ -238,7 +238,7 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
 
           {standardSeats.length > 0 && (
             <>
-              <div className="text-red-500/60 text-xs uppercase font-bold tracking-widest mb-4 mt-8 text-center w-full">Standard - $12</div>
+              <div className="text-red-500/60 text-xs uppercase font-bold tracking-widest mb-4 mt-8 text-center w-full">Standard - ₹{basePrice}</div>
               {getRows(standardSeats).map(row => renderRow(standardSeats.filter(s => s.row === row), row))}
             </>
           )}
@@ -288,7 +288,7 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
                 size="lg"
                 className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white px-12 py-6 rounded-xl font-bold text-lg shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:scale-105 transition-all uppercase tracking-wider disabled:opacity-70 disabled:hover:scale-100"
               >
-                {isProcessingBooking ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</> : `Pay $${totalPrice}`}
+                {isProcessingBooking ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</> : `Pay ₹${totalPrice}`}
               </Button>
             </div>
           </motion.div>
