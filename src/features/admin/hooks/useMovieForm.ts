@@ -42,7 +42,7 @@ export function useMovieForm() {
         toast('OMDB API key is missing. Please configure it in .env.local', 'error');
         return;
       }
-      const { data } = await axios.get(`http://www.omdbapi.com/?t=${encodeURIComponent(searchQuery)}&apikey=${apiKey}`);
+      const { data } = await axios.get(`https://www.omdbapi.com/?t=${encodeURIComponent(searchQuery)}&apikey=${apiKey}`);
       
       if (data.Response === 'True') {
         let duration = '120';
