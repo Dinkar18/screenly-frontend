@@ -9,6 +9,7 @@ import { Seat } from '../types';
 import { Loader2 } from 'lucide-react';
 import { PaymentDialog } from './PaymentDialog';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SeatMapProps {
   showtimeId: string;
@@ -18,6 +19,7 @@ interface SeatMapProps {
 export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
   const { toast } = useToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
   
   const [seats, setSeats] = useState<Seat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -139,6 +141,8 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
     // Race Condition Fix: Wait 3 seconds for the Stripe Webhook to finish updating
     // the backend database to CONFIRMED before redirecting the user to the dashboard.
     setTimeout(() => {
+      // Force React Query to clear its cache so it fetches the new ticket from the server
+      queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
       setShowPaymentDialog(false);
       router.push('/dashboard');
     }, 3000);
