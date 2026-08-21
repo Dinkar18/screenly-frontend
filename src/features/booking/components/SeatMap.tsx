@@ -34,15 +34,22 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
 
     bookingApi.getSeats(showtimeId).then((data: any) => {
       if (isMounted) {
-        const mappedSeats = data.map((s: any, index: number) => {
-          // Keep it extremely simple: 10 seats per row (A-J)
-          const rowNum = Math.floor(index / 10) + 1;
-          const colNum = (index % 10) + 1; 
+        const mappedSeats = data.map((s: any) => {
+          // Clean standard: Backend explicitly provides separate fields
+          let rowNum = s.rowNumber ? String(s.rowNumber) : '1';
+          let colNum = s.seatLetter || 'A';
+          
+          // Graceful fallback for backward compatibility while backend deploys
+          if (!s.rowNumber && s.seatIdentifier) {
+            const match = s.seatIdentifier.match(/^(\d+)([a-zA-Z]+)$/);
+            rowNum = match ? match[1] : '1';
+            colNum = match ? match[2].toUpperCase() : 'A';
+          }
           
           return {
             id: s.showtimeSeatId,
-            row: String(rowNum),
-            number: String.fromCharCode(64 + colNum), // 1->A, 2->B...
+            row: rowNum,
+            number: colNum,
             tier: 'standard', // Keep everything standard as requested
             price: basePrice, // Use dynamic price from Showtime
             status: s.status ? s.status.toLowerCase() : 'available'
