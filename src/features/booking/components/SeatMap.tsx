@@ -134,9 +134,14 @@ export function SeatMap({ showtimeId, basePrice = 15 }: SeatMapProps) {
   const handlePaymentSuccess = async () => {
     if (!bookingId) return;
     
-    toast('Payment successful! Your tickets are confirmed.', 'success');
-    setShowPaymentDialog(false);
-    router.push('/dashboard');
+    toast('Payment successful! Confirming your tickets...', 'success');
+    
+    // Race Condition Fix: Wait 3 seconds for the Stripe Webhook to finish updating
+    // the backend database to CONFIRMED before redirecting the user to the dashboard.
+    setTimeout(() => {
+      setShowPaymentDialog(false);
+      router.push('/dashboard');
+    }, 3000);
   };
 
   const handlePaymentError = (msg: string) => {

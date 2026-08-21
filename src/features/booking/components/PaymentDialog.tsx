@@ -57,7 +57,7 @@ function CheckoutForm({ onSuccess, onError, totalPrice }: CheckoutFormProps) {
         {isProcessing ? (
           <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</>
         ) : (
-          `Pay $${totalPrice}`
+          `Pay ₹${totalPrice}`
         )}
       </Button>
     </form>
